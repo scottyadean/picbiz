@@ -1,0 +1,87 @@
+ <!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% block meta %} {% endblock %}
+<title>{% block title %}PicBiz{% endblock %}</title>
+
+
+<link href="/static/vendor/mui/mui.min.css" rel="stylesheet" type="text/css" />
+<link href="/static/vendor/select2/select2.min.css" rel="stylesheet"  type="text/css" />
+<link href="/static/css/app.css" rel="stylesheet"  type="text/css" />
+
+{% block extracss %} {% endblock %}
+
+<script src="/static/vendor/jquery/jquery.min.js"></script>
+<script src="/static/vendor/mui/mui.min.js"></script>
+<script src="/static/vendor/lowdash/lowdash.js"></script>
+<script src="/static/vendor/select2/select2.min.js"></script>
+
+<script src="/static/js/app.js"></script>
+
+
+</head>
+<body>
+
+<div style="position:fixed; background-color:#fff; width:100%">
+  <div class="mui-appbar">
+  <div class="mui-dropdown">
+    <button class="mui-btn mui-btn--primary" data-mui-toggle="dropdown">
+      Links
+      <span class="mui-caret"></span>
+    </button>
+    <ul class="mui-dropdown__menu">
+      <li><a href="/">home</a></li>
+      {% if user.is_authenticated %}
+  		  <li><a  href='{% url 'logout' %}'>logout</a></li>
+      {% endif %}
+    </ul>
+  </div>
+
+
+  </div>
+
+
+  {% block navbar %}
+  {% endblock %}
+
+</div>
+
+
+<div class="mui-container-fluid">
+
+  <div class="mui-row">
+    <div class="mui-col-md-12 header">
+				<h2 class="mui--text-headline">{% block main_header %}PicBiz{% endblock %}</h2>
+				<p><strong>{% block sub_header %} {% endblock %}</p></strong> <hr />
+		</div>
+	</div>
+
+	{% block content %} {% endblock %}
+</div>
+
+
+<div class="footer">
+  {% csrf_token %}
+</div>
+
+
+
+<script>_app.init("{{csrf_token}}");</script>
+
+
+
+
+
+{% block extrajs %}
+{% endblock %}
+
+
+
+
+
+</body>
+</html>

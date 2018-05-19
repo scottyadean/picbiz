@@ -1,0 +1,9 @@
+Django==2.0.5
+django-taggit==0.22.2
+image==1.5.22
+Pillow==5.1.0
+psycopg2==2.7.4
+psycopg2-binary==2.7.4
+python-slugify==1.2.5
+pytz==2018.4
+Unidecode==1.0.22

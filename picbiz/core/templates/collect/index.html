@@ -1,0 +1,66 @@
+
+
+
+{% extends 'base.html' %}
+
+{% block title %}Holding Tank{% endblock %}
+
+{% block main_header %} Process ({{total_dirs}} New Directories ){% endblock %}
+{% block sub_header %}Note: only images in the root folder will be processed.{% endblock %}
+
+
+
+{% block content %}
+
+  <div class="mui-row">
+    <div class="mui-col-md-12">
+
+
+<table class="mui-table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Full Path</th>
+      <th>Status</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+
+    {% for d in dir_list %}
+
+    <tr>
+      <td>{{d.name}}</td>
+      <td>{{d.path}}</td>
+      <td>{{d.status}}</td>
+      <td><div class="mui-checkbox">
+        <form action="/collect/import-img" id="dir-{{d.name}}" method="post">
+        <input type="hidden" value="{{d.path}}" name="path" />
+        <input type="submit" class="mui-button" value="Import">
+
+        <input type="text" name="river" value=""/>  
+
+        {% csrf_token %}
+        </form>
+      </div>
+      </td>
+
+    </tr>
+
+
+     {% endfor %}
+
+  </tbody>
+</table>
+
+
+
+    </div>
+
+  </div>
+
+{% endblock %}
+
+{% block extrajs %}
+
+{% endblock %}
