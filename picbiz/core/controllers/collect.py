@@ -32,16 +32,20 @@ class Collect():
         path = "{}{}".format(current_dir, d)
         is_dir_in_db  = Directory.objects.filter(**{'full_path':path}).values('id', 'name', 'status')
 
-        if len(is_dir_in_db) > 0 and is_dir_in_db[0].staus != 'done':
+        if len(is_dir_in_db) > 0 and is_dir_in_db[0]['status'] == 'done':
             continue
 
-        status = is_dir_in_db[0].status if len(is_dir_in_db) > 0 else "Not Processed"
+        status = is_dir_in_db[0]['status'] if len(is_dir_in_db) > 0 else "Not Processed"
         dir_list.append( {'name':d, 'status':status, 'path': path } )
 
     res = {'dir_list':dir_list, "total_dirs": len(dir_list), "root_path":settings.UPLOAD_ROOT, "root_dir":root, "current_dir":current_dir}
     return Controller.render(req, res, 'collect/index.html')
 
   def import_img(req):
+
+    if req.method != 'POST':
+        return Controller.goto('/collect/index')
+
     path  = req.POST.get('path')
     data  = {'status':'processing', 'name': os.path.basename(path), 'create_by': req.user.username }
     mkdir, created = Directory.objects.get_or_create(

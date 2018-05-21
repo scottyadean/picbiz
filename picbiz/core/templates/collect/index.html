@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 {% block title %}Holding Tank{% endblock %}
 {% block main_header %}
-
 <div class="mui-col-md-6">
   <i class=" far fa-folder-open"> </i> Process ({{total_dirs}} New Directories )<br />
   <small>Note: only images in the root folder will be processed.</small>
@@ -12,27 +11,21 @@
           <option value="{{root_path}}{{rd}}/">{{rd}}</option>
          {% endfor %}
        </select>
-       <input type='submit' class="mui-button" value=">View" />
+       <input type='submit' class="mui-button" value="View" />
        {% csrf_token %}
      </form>
 </div>
 </div>
   <div class="mui-col-md-6">
-
     <form action="/collect/import-img" id="import-dir-form" style="float:right;" method="post">
       <input type="hidden" id='path' value="" name="path" />
       <label>Apply Section</label>
       <select id='section-select' name='section-select'> </select>
       {% csrf_token %}
     </form>
-
   </div>
-
-
 {% endblock %}
-
 {% block navbar%}
-
 <ul>
         <li>
           <strong>Category 1</strong>

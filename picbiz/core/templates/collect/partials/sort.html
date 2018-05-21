@@ -1,0 +1,124 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Sort{% endblock %}
+
+{% block main_header %}Sort Batch{% endblock %}
+{% block sub_header %} {{path}} {% endblock %}
+
+ {% block extracss %}
+
+ <style>
+  .sm-img {max-width: 120px;}
+ </style>
+
+{% endblock %}
+
+
+{% block content %}
+
+{% load static %}
+<a onclick="img_sort.get_list()">TEST</a>
+
+<div class="mui-row" id="file-list"> </div>
+
+{% endblock %}
+
+{% block extrajs %}
+
+<script type="text/plain" id="file-template">
+ <div class="mui-col-md-2">
+
+      <a onclick='activateModal("/static/<%= dir %>/<%= src %>")' target="_blank" >
+      <img src="/static/<%= dir %>/thumbs/<%= src %>" id="img-<%= src %>" class="sm-img"
+      data-src="/static/<%= dir %>/thumbs/<%= src %>"
+      data-dir="<%= dir %>"
+       />
+
+      </a>
+
+      <a data-dir="<%= dir %>" data-src="<%= src %>" class="rotate" > rotate </a>
+
+      <input type="checkbox" name="selected-image" value="img-<%= src %>" data-dir="<%= dir %>" />
+
+    </td>
+
+
+ </div>
+</script>
+
+<script>
+
+
+    function activateModal(src) {
+    // initialize modal element
+    var modalEl = document.createElement('div');
+    var modalIm = document.createElement('IMG');
+    modalIm.src = src;
+    modalIm.align = 'middle';
+
+    modalIm.style.width = '98%';
+    //modalIm.style.height = '500px';
+    modalIm.style.margin = '2px';
+
+    modalEl.appendChild(modalIm);
+    modalEl.style.width = '50%';
+    modalEl.style.height = '75%';
+    modalEl.style.margin = '100px auto';
+    modalEl.style.overflow = 'hidden';
+    modalEl.style.backgroundColor = '#fff';
+
+    // show modal
+    mui.overlay('on', modalEl);
+  }
+
+
+
+var img_sort = {
+
+    path:'2018-05-12_09_25',
+
+    get_list:function(){
+          _app.xhr_get('/collect/dlist', {dir: img_sort.path}, img_sort.on_list_load);
+      },
+
+    on_list_load:function (e) {
+      let img  = _app.xhr_res(e).results;
+      let tmp  = _.template(_app.el('file-template').innerHTML);
+      let ele  = _app.el('file-list');
+      let total    = img.length-1;
+      img.forEach(function(i, idx) {
+        _app.el_html(ele, tmp({'src':_app.base_name(i), 'dir':img_sort.path, 'idx':idx, 'total':total}));
+      });
+
+    }
+
+  };
+
+
+var img_edit = {
+    rotation_count:0,
+
+    rotation:function(el){
+      console.log(el);
+      let dr = el.getAttribute("data-dir");
+      let fn = el.getAttribute("data-src");
+      img_edit.rotation_count += 1;
+     _app.xhr_get('/img/edit/rotate', {'dir':dr, 'file_name': fn}, function(e){
+
+      img = _app.el('img-'+fn);
+      img_src = img.getAttribute('data-src');
+      img.src = img_src += '?ver='+img_edit.rotation_count;
+      console.log(_app.xhr_res(e));  } );
+    },
+};
+
+
+_app.event_bind('file-list', 'click', function(e) {
+          if (e.target && e.target.matches("a.rotate")) {
+            img_edit.rotation(e.target);
+          }
+          });
+</script>
+
+{% endblock %}
