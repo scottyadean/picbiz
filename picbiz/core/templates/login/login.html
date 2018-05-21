@@ -2,16 +2,15 @@
 
 {% block title %}Login{% endblock %}
 
-{% block main_header %} OBI::ETL::MDS {% endblock %}
+{% block main_header %} Pic Admin {% endblock %}
 {% block sub_header %} Sign In {% endblock %}
 
- 
-  
+
+
 {% block content %}
 
 
 {% for e in errors %} <p>{{e}}</p> {% endfor %}
-
 
 <form class="login-form" action="{% url 'login' %}" method="post">
   {% csrf_token %}
@@ -21,11 +20,7 @@
 </form>
 
 
-
 {% endblock %}
 
 {% block extrajs %}
 {% endblock %}
-
-
-

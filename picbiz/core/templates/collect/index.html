@@ -1,19 +1,75 @@
-
-
-
 {% extends 'base.html' %}
-
 {% block title %}Holding Tank{% endblock %}
+{% block main_header %}
 
-{% block main_header %} Process ({{total_dirs}} New Directories ){% endblock %}
-{% block sub_header %}Note: only images in the root folder will be processed.{% endblock %}
+<div class="mui-col-md-6">
+  <i class=" far fa-folder-open"> </i> Process ({{total_dirs}} New Directories )<br />
+  <small>Note: only images in the root folder will be processed.</small>
+   <div class="mui-selectfield">
+     <form action="/collect/index" id="change-dir-form" method="post">
+       {{root_path}}<select name="current_dir">
+         {% for rd in root_dir %}
+          <option value="{{root_path}}{{rd}}/">{{rd}}</option>
+         {% endfor %}
+       </select>
+       <input type='submit' class="mui-button" value=">View" />
+       {% csrf_token %}
+     </form>
+</div>
+</div>
+  <div class="mui-col-md-6">
+
+    <form action="/collect/import-img" id="import-dir-form" style="float:right;" method="post">
+      <input type="hidden" id='path' value="" name="path" />
+      <label>Apply Section</label>
+      <select id='section-select' name='section-select'> </select>
+      {% csrf_token %}
+    </form>
+
+  </div>
 
 
+{% endblock %}
 
+{% block navbar%}
+
+<ul>
+        <li>
+          <strong>Category 1</strong>
+          <ul style="display: none;">
+            <li><a href="#">Item 1</a></li>
+            <li><a href="#">Item 2</a></li>
+            <li><a href="#">Item 3</a></li>
+          </ul>
+        </li>
+        <li>
+          <strong>Category 2</strong>
+          <ul style="display: none;">
+            <li><a href="#">Item 1</a></li>
+            <li><a href="#">Item 2</a></li>
+            <li><a href="#">Item 3</a></li>
+          </ul>
+        </li>
+        <li>
+          <strong>Category 3</strong>
+          <ul style="display: none;">
+            <li><a href="#">Item 1</a></li>
+            <li><a href="#">Item 2</a></li>
+            <li><a href="#">Item 3</a></li>
+          </ul>
+        </li>
+      </ul>
+
+{%endblock%}
+{% block sub_header %}{% endblock %}
 {% block content %}
 
-  <div class="mui-row">
-    <div class="mui-col-md-12">
+<div class="mui-row">
+
+
+
+<div class="mui-col-md-12">
+
 
 
 <table class="mui-table">
@@ -28,39 +84,60 @@
   <tbody>
 
     {% for d in dir_list %}
-
     <tr>
       <td>{{d.name}}</td>
       <td>{{d.path}}</td>
       <td>{{d.status}}</td>
       <td><div class="mui-checkbox">
-        <form action="/collect/import-img" id="dir-{{d.name}}" method="post">
-        <input type="hidden" value="{{d.path}}" name="path" />
-        <input type="submit" class="mui-button" value="Import">
-
-        <input type="text" name="river" value=""/>  
-
-        {% csrf_token %}
-        </form>
-      </div>
+        <button data-path="{{d.path}}" class="mui-button trigger-import-form">Import</button></div>
       </td>
-
     </tr>
-
-
      {% endfor %}
 
   </tbody>
 </table>
 
+</div>
+</div>
 
 
-    </div>
 
-  </div>
 
 {% endblock %}
 
 {% block extrajs %}
+<script>
+
+var section = {
+  init:()=>{
+    _app.xhr_get('/section/index', {active:true}, (e)=>{
+      section.select_load(_app.xhr_res(e));
+    });
+
+},
+
+select_load:(data) =>{
+  var _select = _app.el('section-select')
+  var _option;
+  _select.appendChild(_app.option.create(-1, ''));
+  _.forOwn(data.sections, (v, k)=>{
+    _select.appendChild(_app.option.create(v.id, v.name));
+  });
+  $(_select).select2({tags: false, selectOnBlur: true, multiple: false});
+
+  _app.event_add_class('.trigger-import-form', 'click', (e)=>{
+      var path   = e.target.getAttribute('data-path');
+      var field = _app.el('path').value = path;
+      var form   = _app.el('import-dir-form')
+          form.submit();
+  });
+
+}
+};
+
+
+section.init();
+</script>
+
 
 {% endblock %}

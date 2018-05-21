@@ -6,11 +6,13 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 {% block meta %} {% endblock %}
-<title>{% block title %}PicBiz{% endblock %}</title>
+<title>{% block title %} Image.io {% endblock %}</title>
 
 
 <link href="/static/vendor/mui/mui.min.css" rel="stylesheet" type="text/css" />
 <link href="/static/vendor/select2/select2.min.css" rel="stylesheet"  type="text/css" />
+<link href="/static/vendor/fa/css/fontawesome-all.min.css" rel="stylesheet"  type="text/css" />
+
 <link href="/static/css/app.css" rel="stylesheet"  type="text/css" />
 
 {% block extracss %} {% endblock %}
@@ -19,68 +21,77 @@
 <script src="/static/vendor/mui/mui.min.js"></script>
 <script src="/static/vendor/lowdash/lowdash.js"></script>
 <script src="/static/vendor/select2/select2.min.js"></script>
-
 <script src="/static/js/app.js"></script>
-
-
 </head>
 <body>
 
-<div style="position:fixed; background-color:#fff; width:100%">
-  <div class="mui-appbar">
-  <div class="mui-dropdown">
-    <button class="mui-btn mui-btn--primary" data-mui-toggle="dropdown">
-      Links
-      <span class="mui-caret"></span>
-    </button>
-    <ul class="mui-dropdown__menu">
-      <li><a href="/">home</a></li>
-      {% if user.is_authenticated %}
-  		  <li><a  href='{% url 'logout' %}'>logout</a></li>
-      {% endif %}
-    </ul>
+<div id="sidedrawer" class="mui--no-user-select">
+
+  <div id="sidedrawer-brand" class="mui--appbar-line-height">
+    <span class="mui--text-title">Image.io</span>
   </div>
+  <div class="mui-divider"></div>
+   {% block navbar %}
+   {% endblock %}
+
+</div>
+
+<header id="header">
+  <div class="mui-appbar mui--appbar-line-height" style="background-color:#FFF; ">
+    <div class="mui-container-fluid">
+
+      <div class="mui-row">
+        <div class="mui-col-xs-6">
 
 
+          <a class="sidedrawer-toggle mui--visible-xs-inline-block mui--visible-sm-inline-block js-show-sidedrawer">☰</a>
+          <a class="sidedrawer-toggle mui--hidden-xs mui--hidden-sm js-hide-sidedrawer">☰</a>
+          <span class="mui--text-title mui--visible-xs-inline-block">Image.io</span>
+
+        </div>
+        <div class="mui-col-xs-6">
+          <div style="position:relative; float:right;">
+          <button class="mui-btn mui-btn--small" data-mui-toggle="dropdown">
+            <i class="fas fa-user-alt"></i> {{user.username}}<span class="mui-caret"></span>
+          </button>
+          <ul class="mui-dropdown__menu">
+            <li><a href="/">home</a></li>
+            {% if user.is_authenticated %}
+              <li><a  href='{% url 'logout' %}'>logout</a></li>
+            {% endif %}
+          </ul>
+          </div>
+
+        </div>
+      </div>
+
+
+    </div>
   </div>
+  <div class="mui-divider"></div>
 
+</header>
 
-  {% block navbar %}
-  {% endblock %}
-
+<div id="content-wrapper">
+  <div class="mui-container-fluid" style="margin-top:80px;">
+  <p class="mui--text-headline">{% block main_header %}PicBiz{% endblock %}</p>
+  <p><strong>{% block sub_header %} {% endblock %}</p></strong> <hr />
+  {% block content %} {% endblock %}
+  </div>
 </div>
 
-
-<div class="mui-container-fluid">
-
-  <div class="mui-row">
-    <div class="mui-col-md-12 header">
-				<h2 class="mui--text-headline">{% block main_header %}PicBiz{% endblock %}</h2>
-				<p><strong>{% block sub_header %} {% endblock %}</p></strong> <hr />
-		</div>
-	</div>
-
-	{% block content %} {% endblock %}
-</div>
-
-
-<div class="footer">
-  {% csrf_token %}
-</div>
-
-
+<footer id="footer">
+  <div class="mui-container-fluid">
+    <br>
+    Made with ♥ by scottydean
+  </div>
+</footer>
 
 <script>_app.init("{{csrf_token}}");</script>
 
 
-
-
-
 {% block extrajs %}
 {% endblock %}
-
-
-
 
 
 </body>

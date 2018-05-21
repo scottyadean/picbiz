@@ -10,8 +10,8 @@ from core.controllers.section import SectionController
 urlpatterns = [
     path(r'', Index.index, name='index'),
     path(r'login', Index.login, name='login'),
+    path(r'accounts/login/', Index.login, name='login-next'),
     path(r'logout', Index.logout, name='logout'),
-    path(r'welcome', Index.welcome, name='welcome'),
 
     path(r'collect/<str:action>', Collect.router, name='core-collect-router'),
     path(r'img/edit/<str:action>', ImgEditor.router, name='core-img-edit-router'),

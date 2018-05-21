@@ -1,7 +1,5 @@
 const _app = {
-
     csrf_token: '',
-
     init:function(token){
       this.csrf_token = token;
     },
@@ -34,6 +32,14 @@ const _app = {
 
       event_add:(el, action, callback)=>{
         el.addEventListener(action, callback);
+      },
+
+      event_add_class:(classname, action, callback)=>{
+        document.querySelectorAll(classname).forEach(function(element) {
+          console.log(element)
+          element.addEventListener(action, callback);
+        });
+
       },
 
       base_name:(str)=>{
@@ -80,3 +86,54 @@ const _app = {
 
 
 };
+
+
+
+jQuery(function($) {
+  var $bodyEl = $('body'),
+      $sidedrawerEl = $('#sidedrawer');
+
+
+  function showSidedrawer() {
+    // show overlay
+    var options = {
+      onclose: function() {
+        $sidedrawerEl
+          .removeClass('active')
+          .appendTo(document.body);
+      }
+    };
+
+    var $overlayEl = $(mui.overlay('on', options));
+
+    // show element
+    $sidedrawerEl.appendTo($overlayEl);
+    setTimeout(function() {
+      $sidedrawerEl.addClass('active');
+    }, 20);
+  }
+
+
+  function hideSidedrawer() {
+    $bodyEl.toggleClass('hide-sidedrawer');
+  }
+
+
+  $('.js-show-sidedrawer').on('click', showSidedrawer);
+  $('.js-hide-sidedrawer').on('click', hideSidedrawer);
+
+  // ==========================================================================
+  // Animate menu
+  // ==========================================================================
+  var $titleEls = $('strong', $sidedrawerEl);
+
+  $titleEls
+    .next()
+    .hide();
+
+  $titleEls.on('click', function() {
+    $(this).next().slideToggle(200);
+  });
+
+
+});

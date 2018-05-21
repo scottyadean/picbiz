@@ -4,6 +4,7 @@ import glob
 import zipfile
 from PIL import Image, ExifTags
 
+from datetime import datetime
 from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
 
@@ -16,28 +17,29 @@ from core.models.directory import Directory
 from core.models.location import Location
 
 class Collect():
-
   actions = ['index', 'import_img', 'upload', 'sort', 'thumbs']
-
   @login_required
   def router(req, **kwargs):
     return Controller.route(Collect, Collect.actions, req, kwargs)
 
   def index(req):
     """ List the dir. to process """
-    search_dir = settings.UPLOAD_DIR
-    os.chdir(search_dir)
-    dirs = list(filter(os.path.isdir, os.listdir(search_dir)))
-    dirs.sort(key=lambda x: os.path.getmtime(x), reverse=True)
-    dir_in_db   = Directory.objects.filter(**{}).exclude(status='done').values('id', 'name', 'status')
-    indexed_dir = index_by_dict(dir_in_db, 'name')
+    current_dir = req.POST.get('current_dir', settings.UPLOAD_DIR)
+    dirs = Collect.get_dir_list(current_dir)
+    root = Collect.get_dir_list(settings.UPLOAD_ROOT, True)
     dir_list = []
     for d in dirs:
-      db_info = indexed_dir.get(d, None)
-      status = "Not Processed" if db_info == None else "Pending Import"
-      dir_list.append( {'name':d, 'db_info':db_info, 'status':status, 'path': "{}{}".format(settings.UPLOAD_DIR, d) } )
+        path = "{}{}".format(current_dir, d)
+        is_dir_in_db  = Directory.objects.filter(**{'full_path':path}).values('id', 'name', 'status')
 
-    return Controller.render(req, {'dir_list':dir_list, "total_dirs": len(dir_list)}, 'collect/index.html')
+        if len(is_dir_in_db) > 0 and is_dir_in_db[0].staus != 'done':
+            continue
+
+        status = is_dir_in_db[0].status if len(is_dir_in_db) > 0 else "Not Processed"
+        dir_list.append( {'name':d, 'status':status, 'path': path } )
+
+    res = {'dir_list':dir_list, "total_dirs": len(dir_list), "root_path":settings.UPLOAD_ROOT, "root_dir":root, "current_dir":current_dir}
+    return Controller.render(req, res, 'collect/index.html')
 
   def import_img(req):
     path  = req.POST.get('path')
@@ -94,8 +96,11 @@ class Collect():
 
 
 
-
-
-
-  # def update_attr(req):
-  #   return Controller.render_json(Controller.update_attr(Client, req, 'obi'))
+  def get_dir_list(search_dir, reverse=False):
+      """ Get dir list by path set reverse order for new created 1st """
+      if not os.path.exists(search_dir):
+          os.makedirs(search_dir)
+      os.chdir(search_dir)
+      dirs = list(filter(os.path.isdir, os.listdir(search_dir)))
+      dirs.sort(key=lambda x: os.path.getmtime(x), reverse=reverse)
+      return dirs
