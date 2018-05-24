@@ -1,0 +1,31 @@
+
+ <form class="mui-col-md-2 mui-panel " id="img-<%= name %>-form">
+
+      <a onclick='_scan.modal("<%= src %>", "<%= name %>");' target="_blank" >
+      <img src="<%=thumb%>" id="img-<%= name %>" class="sm-img" data-src="<%=thumb%>" data-dir="<%= dir %>" />
+
+      </a>
+
+      <input type="checkbox" class="chkbox checkmark" name="selected-image" value="img-<%= name %>" data-dir="<%= dir %>" />
+
+
+        <a data-dir="<%= dir %>" data-src="<%= name %>" class="rotate" > rotate </a>
+
+        <table>
+          <tbody>
+          <tr><td>Date:</td><td><input id="img-<%= name %>-date" name="date" type="date"></td></tr>
+          <tr><td>Company:</td><td><span id="img-<%= name %>-company-display"></span></td></tr>
+          <tr><td>Section:</td><td><span id="img-<%= name %>-section-display"><%=section_name%></span></td></tr>
+          <tr><td>Location:</td><td><span id="img-<%= name %>-loc-display"><%=loc_name%></span></td></tr>
+          <tr><td>Subject:</td><td><small><input type="text" id="img-<%=name%>-subject" name='subject' maxlength="255" ></small></td></tr>
+          </tbody>
+        </table>
+
+         <input type="hidden" name="directory" value="<%= dir %>"  maxlength="255" required="" id="img-<%= name %>-dir" >
+         <input type="hidden" name="name" value="<%= name %>" maxlength="255" required="" id="img-<%= name %>-name" >
+         <input type="hidden" name="company_id" value="" id="img-<%= name %>-company" />
+         <input type="hidden" name="section_id" value="<%=section_id%>" id="img-<%= name %>-section" />
+         <input type="hidden" name="location_id" value="<%=loc_id%>" id="img-<%= name %>-loc" />
+        </div>
+
+ </form>

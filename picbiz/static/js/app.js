@@ -68,6 +68,16 @@ const _app = {
       el.insertAdjacentHTML('beforeend', html);
     },
 
+    //search a dom list
+    el_find: function (evt) {
+     var fld, trg, tag, lst;
+     fld  = evt;
+     cls  = fld.getAttribute('data-class');
+     trg  = _app.el(fld.getAttribute('data-target'));
+     lst  = document.querySelectorAll(cls);
+     lst.forEach((n)=>{ n.style.display = n.innerHTML.toUpperCase().indexOf(fld.value.toUpperCase())>-1 ? "" : "none"; });
+    },
+
     //options tags
     option:{
       create:(id, value) => {

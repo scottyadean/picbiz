@@ -37,32 +37,47 @@
 </div>
 
 <header id="header">
+
+  {% block toolbar %}
+
+  <p class="mui--text-headline">{% block main_header %}PicBiz{% endblock %}</p>
+  <p><strong>{% block sub_header %} {% endblock %}</p></strong>
+
   <div class="mui-appbar mui--appbar-line-height" style="background-color:#FFF; ">
     <div class="mui-container-fluid">
 
       <div class="mui-row">
-        <div class="mui-col-xs-6">
+        <div class="mui-col-xs-8">
 
 
           <a class="sidedrawer-toggle mui--visible-xs-inline-block mui--visible-sm-inline-block js-show-sidedrawer">☰</a>
           <a class="sidedrawer-toggle mui--hidden-xs mui--hidden-sm js-hide-sidedrawer">☰</a>
           <span class="mui--text-title mui--visible-xs-inline-block">Image.io</span>
 
+
         </div>
-        <div class="mui-col-xs-6">
+        <div class="mui-col-xs-4">
           <div style="position:relative; float:right;">
           <button class="mui-btn mui-btn--small" data-mui-toggle="dropdown">
             <i class="fas fa-user-alt"></i> {{user.username}}<span class="mui-caret"></span>
           </button>
           <ul class="mui-dropdown__menu">
-            <li><a href="/">home</a></li>
+            <li><a href="/">Home</a></li>
             {% if user.is_authenticated %}
-              <li><a  href='{% url 'logout' %}'>logout</a></li>
+              <li><a href="/collect/index">Import</a></li>
+              <li><a href="/admin">Admin</a></li>
+              <li><a  href='{% url 'logout' %}'>Logout</a></li>
             {% endif %}
           </ul>
           </div>
 
+
         </div>
+
+  {% endblock %}
+
+
+
       </div>
 
 
@@ -73,9 +88,8 @@
 </header>
 
 <div id="content-wrapper">
-  <div class="mui-container-fluid" style="margin-top:80px;">
-  <p class="mui--text-headline">{% block main_header %}PicBiz{% endblock %}</p>
-  <p><strong>{% block sub_header %} {% endblock %}</p></strong> <hr />
+  <div class="mui-container-fluid" style="margin-top:85px;">
+
   {% block content %} {% endblock %}
   </div>
 </div>

@@ -16,5 +16,10 @@ class SectionController():
   def search(req):
     """ List search results """
     f = {'name__icontains':req.GET.get('keyword', '')}
-    locs = Section.objects.filter(**f).order_by('name').values('id', 'name')[:100]
+    secs = Section.objects.filter(**f).order_by('name').values('id', 'name')[:100]
     return Section.render_json({'sections':list(secs), "total": len(secs)})
+
+  def read(req):
+      sect = req.POST.get('id')
+      section = Section.objects.get(id=int(sect)).values('id', 'name')
+      return Section.render_json({'sections':list(section)})

@@ -6,6 +6,7 @@ from core.controllers.img_editor import ImgEditor
 from core.controllers.company import CompanyController
 from core.controllers.location import LocationController
 from core.controllers.section import SectionController
+from core.controllers.ui import UIController
 
 urlpatterns = [
     path(r'', Index.index, name='index'),
@@ -18,5 +19,6 @@ urlpatterns = [
     path(r'company/<str:action>', CompanyController.router, name='core-company-router'),
     path(r'location/<str:action>', LocationController.router, name='core-location-router'),
     path(r'section/<str:action>', SectionController.router, name='core-section-router'),
+    path(r'ui/<str:action>', UIController.router, name='core-ui-router'),
 
 ]

@@ -15,9 +15,10 @@ from core.lib.img_helpers import thumb_nail
 
 from core.models.directory import Directory
 from core.models.location import Location
+from core.models.section import Section
 
 class Collect():
-  actions = ['index', 'import_img', 'upload', 'sort', 'thumbs']
+  actions = ['index', 'import_img', 'save', 'upload', 'sort', 'thumbs']
   @login_required
   def router(req, **kwargs):
     return Controller.route(Collect, Collect.actions, req, kwargs)
@@ -52,7 +53,18 @@ class Collect():
       full_path=path,
       defaults=data,
     )
-    return Controller.render(req, {"path": path, "mkdir": mkdir}, 'collect/import.html')
+
+    sect  = req.POST.get('section-select')
+    loc   = req.POST.get('location-select')
+    # = Section.objects.get(id=1).values('id', 'name')
+    sect_obj = Section.objects.filter(id=1).values('id', 'name')[0]
+    loc_obj  = Location.objects.filter().values('id', 'name')[0]
+    return Controller.render(req, {"path": path,
+    "section_id":sect,
+    'sect_obj':sect_obj,
+    'loc_id':loc,
+    'loc_obj':loc_obj,
+    "mkdir": mkdir}, 'collect/import.html')
 
 
   def upload(req):
@@ -68,6 +80,9 @@ class Collect():
   def sort(req, **kwargs):
     return Controller.render(req, {'path': kwargs.get('name')}, 'collect/sort.html')
 
+  def save(req):
+    if req.method == "POST":
+      return Controller.render_json({'params':req.POST})
 
   def thumbs(req):
     _dir = req.POST.get('dir')

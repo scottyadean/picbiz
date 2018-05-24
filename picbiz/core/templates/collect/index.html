@@ -11,7 +11,7 @@
           <option value="{{root_path}}{{rd}}/">{{rd}}</option>
          {% endfor %}
        </select>
-       <input type='submit' class="mui-button" value="View" />
+       <input type='s ubmit' class="mui-button" value="View" />
        {% csrf_token %}
      </form>
 </div>
@@ -21,6 +21,11 @@
       <input type="hidden" id='path' value="" name="path" />
       <label>Apply Section</label>
       <select id='section-select' name='section-select'> </select>
+
+      <label>Apply Location</label>
+      <select id='location-select' name='location-select'> </select>
+
+
       {% csrf_token %}
     </form>
   </div>
@@ -107,6 +112,12 @@ var section = {
       section.select_load(_app.xhr_res(e));
     });
 
+    _app.xhr_get('/location/index', {active:true}, (e)=>{
+      section.location_load(_app.xhr_res(e));
+    });
+
+
+
 },
 
 select_load:(data) =>{
@@ -125,8 +136,23 @@ select_load:(data) =>{
           form.submit();
   });
 
+},
+
+location_load:(data) =>{
+  var _select = _app.el('location-select')
+  var _option;
+  _select.appendChild(_app.option.create(-1, ''));
+  _.forOwn(data.locations, (v, k)=>{
+    _select.appendChild(_app.option.create(v.id, v.name));
+  });
+  $(_select).select2({tags: false, selectOnBlur: true, multiple: false});
 }
+
 };
+
+
+
+
 
 
 section.init();
