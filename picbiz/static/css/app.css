@@ -1,5 +1,11 @@
 .sm-img {max-width: 300px;}
-
+.pad-img{ padding: 10px; }
+.img-layer {
+    cursor: pointer;
+    border: 1px solid #CCC;
+    margin: 10px;
+    box-shadow: 2px 2px #d3d1d1, 4px 4px #dddddd, 6px 6px #f6f6f6 ;
+}
 
 /**
  * Body CSS
@@ -19,6 +25,33 @@ button {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.004);
+}
+
+.checkmark{
+  padding:
+}
+
+.pointer{
+ cursor:pointer;
+}
+/* Images */
+
+.del-float-btn{
+  display: block;
+  background-color: red;
+  color: white;
+  cursor: pointer;
+  width: 12px;
+  height: 12px;
+  border-radius: 5px;
+  text-align: center;
+  line-height: 11px;
+  font-size: 12px;
+  font-weight: bold;
+  position: absolute;
+top: 0px;
+right: 0;
+
 }
 
 
@@ -152,7 +185,6 @@ button {
   text-decoration: none;
 }
 
-
 /**
  * Footer CSS
  */
@@ -165,3 +197,79 @@ button {
   color: #fff;
   text-decoration: underline;
 }
+
+/*
+checkbox
+*/
+
+/* Create a custom checkbox */
+.checkmark {
+  height: 25px;
+  width: 25px;
+  background-color: green;
+}
+
+/* On mouse-over, add a grey background color */
+.checkmark:hover {
+  background-color: #ccc;
+}
+
+input.checkmark:checked ~ .checkmark {
+/* When the checkbox is checked, add a blue background */
+  background-color: #2196F3;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the checkmark when checked */
+input.checkmark:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the checkmark/indicator */
+ .checkmark:after {
+  left: 9px;
+  top: 5px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+.pull-right{
+ float: right;
+}
+
+.sleeping-giant {
+    position: absolute;
+    top: 50px;
+    left: 0px;
+    padding: 5px;
+    background: #fff;
+    display: none;
+    z-index: 1000;
+}
+
+.sleeping-giant-active {
+    background: #f6f6f6;
+    background-color: rgb(246, 246, 246);
+    width: 100%;
+    display: block !important;
+    visibility: visible !important;
+}
+
+.sleeping-giant-close{
+ height: 50px;
+}
+
+.slide-content{position: relative; height: 500px; overflow-y: hidden; margin-left: 200px; }
+.display-left{position:absolute;top:50%;left:0%;transform:translate(0%,-50%);-ms-transform:translate(-0%,-50%)}
+.display-right{position:absolute;top:50%;right:0%;transform:translate(0%,-50%);-ms-transform:translate(0%,-50%)}

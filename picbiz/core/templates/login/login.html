@@ -2,8 +2,8 @@
 
 {% block title %}Login{% endblock %}
 
-{% block main_header %} Pic Admin {% endblock %}
-{% block sub_header %} Sign In {% endblock %}
+{% block main_header %}{% endblock %}
+{% block sub_header %}{% endblock %}
 
 
 
@@ -11,7 +11,7 @@
 
 
 {% for e in errors %} <p>{{e}}</p> {% endfor %}
-
+<label>Sign In:</label>
 <form class="login-form" action="{% url 'login' %}" method="post">
   {% csrf_token %}
     <input type="text" class="form-control" name="username" placeholder="Username" required="true">

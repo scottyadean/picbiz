@@ -1,0 +1,323 @@
+{% extends 'base.html' %}
+{% block extracss %} {% endblock %}
+{% block title %}Scan/Import Directory{% endblock %}
+
+{% block toolbar %}
+
+<div  style="background-color:#fff;">
+<span id="import-message">Starting Import</span>
+
+<table style="width:100%; padding:1px; margin:0px;">
+
+  <tbody>
+   <tr>
+       <td valign='top'>
+         {% include 'collect/partials/select-company.html' %}
+       </td>
+       <td valign='top'>
+         {% include 'collect/partials/select-section.html' %}
+       </td>
+
+       <td valign='top'>
+         {% include 'collect/partials/select-location.html' %}
+       </td>
+
+       <td valign='top'>
+         {% include 'collect/partials/select-subject.html' %}
+       </td>
+
+       <td valign='top'>
+         <button id="save_seq" class="save_seq mui-btn mui-btn--small mui-btn--primary">Save Sequence</button>
+       </td>
+
+</tr>
+</tbody>
+
+</table>
+</div>
+
+{% endblock %}
+
+{% block navbar %}
+
+<div id="quick-btn-wrapper">
+  <div class="mui-textfield">
+  <input type="text" onkeyup="_app.el_find(this);" placeholder="Company Search" class="" data-target="company-quick-btns", data-class='.quick_btn_trigger' />
+</div>
+  <div id="company-quick-btns" > </div>
+</div>
+
+{% endblock %}
+
+
+{% block main_header %}{% endblock %}
+
+
+{% block sub_header %}
+
+{% endblock %}
+
+
+{% block content %}
+<div class="mui-row" style="margin:20px;">
+  <div class="mui-col-md-12">
+    <div id="file-list"> </div>
+  </div>
+</div>
+{% endblock %}
+
+
+
+
+{% block extrajs %}
+
+<script src='/static/vendor/jquery/select_on_shift.js'></script>
+<script src='/static/js/views/read.js'></script>
+
+<script type="text/plain" id="file-list-temp">
+{% include 'collect/partials/file-list.tmpl' with full_path=path mkdir=mkdir %}
+</script>
+
+
+<script>
+
+    /*
+      Enable filling of text fields
+      from edit toolbar
+    */
+    const tag_editor = {
+
+      init:() =>{
+        tag_editor.company.init();
+        tag_editor.loc.init();
+        tag_editor.subject.init();
+        tag_editor.section.init();
+        tag_editor.quick_btn.init();
+      },
+
+
+      quick_btn:{
+
+        init:()=>{
+          _app.event_add_class('.del-float-btn', 'click', tag_editor.quick_btn._remove);
+          _app.event_add_class('.create_quick_btn', 'click', tag_editor.quick_btn._set);
+           _app.event_bind('quick-btn-wrapper', 'click', tag_editor.quick_btn._click);
+           tag_editor.quick_btn._load();
+        },
+
+       _click:(e)=>{
+          if (e.target && e.target.matches("button.quick_btn_trigger")) {
+                 tag_editor.company.select_apply(e.target.innerHTML, e.target.value);
+           }
+       },
+
+        _load:()=>{
+
+         _app.xhr_get('/ui/index', {type:'quick_btn'}, (e)=>{
+
+           var res = _app.xhr_res(e);
+           res.results.forEach( (node)=> {
+             ele = _app.el(node.group+'-quick-btns');
+             _app.el_html(ele, node.markup);
+           });
+         });
+        },
+        _set:(e)=>{
+
+           var ele = e.target;
+           var trg = _app.el(ele.getAttribute('data-target'));
+           var grp = ele.getAttribute('data-group')
+           var evt = ele.getAttribute('data-event');
+           var btn = document.createElement("button");
+           var tmp = document.createElement("div");
+           var txt = _app.option.txt(trg);
+
+             //<div id="drag1" draggable="true" style="background-color:#333; width:100px;" ondragstart="(event)">TEST</div>
+
+
+           btn.className = 'mui-btn mui-btn--small mui-btn--primary quick_btn_trigger'
+           btn.type = 'button'
+           btn.value  = trg.value;
+           btn.setAttribute('data-event', evt);
+           btn.setAttribute('data-group', grp);
+           btn.setAttribute('data-id', '{}');
+           btn.style.position = 'relative';
+           btn.innerHTML = txt;
+           tmp.appendChild(btn);
+
+           var mk = tmp.innerHTML
+           _app.xhr_post('/ui/create', {name:txt, type:'quick_btn', markup: mk, group: grp}, (e)=>{});
+           _app.el(grp+'-quick-btns').appendChild(btn);
+        },
+
+
+
+          btnAllowDrop:(e)=>{
+            e.preventDefault();
+          },
+
+            btnDrag:(e)=>{
+                e.dataTransfer.setData("text", e.target.id);
+            },
+
+            btnDrop:(e)=>{
+                e.preventDefault();
+                var data = e.dataTransfer.getData("text");
+                e.target.appendChild(document.getElementById(data));
+          },
+
+
+      _remove:(e)=>{console.log(e)  },
+
+      },
+
+      company:{
+          select:'',
+          btn:'',
+          init:()=>{
+            tag_editor.company.select = _app.el('company-select');
+            tag_editor.company.btn    = _app.el('evt-add-company');
+            tag_editor.company.select_init();
+          },
+          select_init:()=>{
+              _app.xhr_get('/company/index', {active:true}, (e)=>{
+                tag_editor.company.select_events();
+                tag_editor.company.select_load(_app.xhr_res(e));
+              });
+          },
+          select_events:()=>{
+            _app.event_add(tag_editor.company.btn, 'click', ()=>{
+              tag_editor.company.select_apply(_app.option.txt(tag_editor.company.select),
+                                                              tag_editor.company.select.value);
+            });
+          },
+
+          select_apply:(txt, val)=>{
+            var checkboxes = _app.query_dom("input[type='checkbox']:checked");
+            checkboxes.forEach((node, idx)=>{
+              _app.el('img-'+node.value+'-company-display').innerHTML = txt;
+              _app.el('img-'+node.value+'-company').value = val;
+            });
+          },
+          select_load:(data)=>{
+            var _select = tag_editor.company.select
+            var _option;
+            _select.appendChild(_app.option.create(-1, ''));
+            _.forOwn(data.companies, (v, k)=>{
+              _select.appendChild(_app.option.create(v.id, v.name));
+            });
+            $(_select).select2({tags: true, selectOnBlur: true, multiple: false});
+          }
+      },
+
+
+      loc:{
+        select:'',
+        btn:'',
+        init:() => {
+          tag_editor.loc.select = _app.el('loc-select');
+          tag_editor.loc.btn    = _app.el('evt-add-loc');
+          tag_editor.loc.select_init();
+        },
+        select_init:()=>{
+            _app.xhr_get('/location/index', {active:true}, (e)=>{
+              tag_editor.loc.select_events();
+              tag_editor.loc.select_load(_app.xhr_res(e));
+            });
+        },
+        select_events:()=>{
+          _app.event_add(tag_editor.loc.btn, 'click', ()=>{
+            var checkboxes = _app.query_dom("input[type='checkbox']:checked");
+            checkboxes.forEach((node, idx)=>{
+            _app.el('img-'+node.value+'-loc-display').innerHTML = _app.option.txt(tag_editor.loc.select);
+            _app.el('img-'+node.value+'-loc').value = tag_editor.loc.select.value;
+          });
+          });
+        },
+        select_load:(data) => {
+          var _select = tag_editor.loc.select
+          var _option;
+          _select.appendChild(_app.option.create(-1, ''));
+          _.forOwn(data.locations, (v, k)=>{
+            _select.appendChild(_app.option.create(v.id, v.name));
+          });
+          $(_select).select2({tags: false, selectOnBlur: true, multiple: false});
+        }
+      },
+
+
+      subject:{
+        field:'',
+        btn:'',
+        init:() => {
+          tag_editor.subject.field = _app.el('subject-select');
+          tag_editor.subject.btn = _app.el('evt-add-subject');
+          tag_editor.subject.select_events();
+        },
+
+        select_events:()=>{
+          _app.event_add(tag_editor.subject.btn, 'click',()=>{
+            var checkboxes = _app.query_dom("input[type='checkbox']:checked");
+            checkboxes.forEach((node, idx)=>{
+            _app.el('img-'+node.value+'-subject').value = tag_editor.subject.field.value;
+          });
+          });
+        },
+      },
+
+
+
+      section:{
+        select:'',
+        btn:'',
+        init:()=>{
+          tag_editor.section.select = _app.el('section-select');
+          tag_editor.section.btn    = _app.el('evt-add-section');
+          tag_editor.section.select_init();
+        },
+        select_init:()=>{
+            _app.xhr_get('/section/index', {active:true}, (e)=>{
+              tag_editor.section.select_events();
+              tag_editor.section.select_load(_app.xhr_res(e));
+            });
+        },
+        select_events:()=>{
+          _app.event_add(tag_editor.section.btn, 'click', ()=>{
+            var checkboxes = _app.query_dom("input[type='checkbox']:checked");
+            checkboxes.forEach((node, idx)=>{
+            _app.el('img-'+node.value+'-section-display').innerHTML = _app.option.txt(tag_editor.section.select);
+            _app.el('img-'+node.value+'-section').value = tag_editor.section.select.value;
+          });
+          });
+        },
+        select_load:(data)=>{
+          var _select = tag_editor.section.select
+          var _option;
+          _select.appendChild(_app.option.create(-1, ''));
+          _.forOwn(data.sections, (v, k)=>{
+            _select.appendChild(_app.option.create(v.id, v.name));
+          });
+          $(_select).select2({tags: false, selectOnBlur: true, multiple: false});
+        }
+      },
+
+    };
+
+    $(document).ready(() => {
+      tag_editor.init();
+      _scan.init({
+       path:"{{path}}",
+       directory_name:"{{mkdir.name}}",
+       directory_id:"{{mkdir.id}}",
+       section_id:"{{sect_obj.id}}",
+       section_name:"{{sect_obj.name}}",
+       location_id:"{{loc_obj.id}}",
+       location_name:"{{loc_obj.name}}"
+      });
+      select_on_shift('#file-list', '.chkbox');
+    });
+
+</script>
+
+
+{% endblock %}

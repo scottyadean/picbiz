@@ -5,7 +5,7 @@ from core.models.ui import UI
 
 
 class UIController():
-    actions = ['index', 'create', 'search']
+    actions = ['index', 'create', 'search', 'delete_all']
 
     def router(req, **kwargs):
         return Controller.route(UIController, UIController.actions, req, kwargs)
@@ -34,3 +34,7 @@ class UIController():
         f = {'name__icontains':req.GET.get('keyword', '')}
         locs = Section.objects.filter(**f).order_by('name').values('id', 'name')[:100]
         return Section.render_json({'sections':list(secs), "total": len(secs)})
+
+    def delete_all(req):
+        UI.objects.filter(**{}).delete()
+        return Controller.render_json({'action':'delete_all'})

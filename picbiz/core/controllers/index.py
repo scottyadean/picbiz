@@ -1,10 +1,16 @@
+import datetime
 from core.lib.controller import Controller, login_required
 from django.contrib.auth import authenticate, login, logout
+from core.models.company import Company
+from core.models.section import Section
 
 class Index():
 
   def index(req):
-    return Controller.render(req, {"errors":[]},  'index/index.html')
+    company = Company.objects.all().exclude(name="Not Set").values('id', 'name')
+    section = Section.objects.all().values('id', 'name')
+    ctx = {"date": datetime.date.today().strftime("%Y-%m-%d"), "company":company, 'section':section}
+    return Controller.render(req, ctx,'index/index.html')
 
   def login(req):
       errors = []

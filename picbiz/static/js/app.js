@@ -26,6 +26,14 @@ const _app = {
         return e.target.response;
       },
 
+      xhr_form_data:(inputs)=>{
+       values = {};
+        for(var i=0; i<inputs.length; i++){
+          values[inputs[i].name] = inputs[i].value;
+        }
+        return values;
+      },
+
       event_bind:(root_node, evt_name, callback) => {
           document.getElementById(root_node).addEventListener(evt_name , callback);
       },
@@ -46,9 +54,16 @@ const _app = {
         return str.split('\\').pop().split('/').pop();
       },
 
-
       query_dom:(q)=>{
         return document.querySelectorAll(q);
+      },
+
+      query_tags:(e, tag)=>{
+        return e.getElementsByTagName(tag);
+      },
+
+      query_class:(e, c)=>{
+       return e.getElementsByClassName(c);
       },
 
       query_str:(obj) =>{
@@ -92,6 +107,23 @@ const _app = {
       }
 
     }, //options
+
+    css:{
+      style:(e, props)=>{
+        for(var key in props){e['style'][key] = props[key];}
+       return e;
+      },
+    },
+
+
+    sleeping_giant: {
+        _open: function () {
+            $("#sleeping-giant").addClass("sleeping-giant-active").css("height", $(document).height() + 'px');
+        },
+        _close: function () {
+            $('#sleeping-giant').removeClass('sleeping-giant-active');
+        }
+    },
 
 
 

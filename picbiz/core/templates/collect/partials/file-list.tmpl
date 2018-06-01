@@ -1,31 +1,34 @@
+ <form class="mui-col-md-2 mui-panel " id="form-<%= val.id %>">
+      <img class="modal pointer sm-img" src="<%=val.thumb_path%>"
+           id="img-<%= val.id %>"
+           class="sm-img model pointer"
+           data-src="<%=val.src_path%>" data-dir="<%= dir %>" />
 
- <form class="mui-col-md-2 mui-panel " id="img-<%= name %>-form">
-
-      <a onclick='_scan.modal("<%= src %>", "<%= name %>");' target="_blank" >
-      <img src="<%=thumb%>" id="img-<%= name %>" class="sm-img" data-src="<%=thumb%>" data-dir="<%= dir %>" />
-
-      </a>
-
-      <input type="checkbox" class="chkbox checkmark" name="selected-image" value="img-<%= name %>" data-dir="<%= dir %>" />
-
-
-        <a data-dir="<%= dir %>" data-src="<%= name %>" class="rotate" > rotate </a>
-
+      <input type="checkbox"
+             id="checkbox-<%=val.id%>"
+             class="chkbox checkmark"
+             name="selected-image" data-name="<%=val.name%>"
+             value="<%= val.id %>" data-dir="<%= dir %>" />
+        <!--a data-dir="<%= dir %>" data-src="<%= val.name %>" class="rotate" > rotate </a-->
         <table>
           <tbody>
-          <tr><td>Date:</td><td><input id="img-<%= name %>-date" name="date" type="date"></td></tr>
-          <tr><td>Company:</td><td><span id="img-<%= name %>-company-display"></span></td></tr>
-          <tr><td>Section:</td><td><span id="img-<%= name %>-section-display"><%=section_name%></span></td></tr>
-          <tr><td>Location:</td><td><span id="img-<%= name %>-loc-display"><%=loc_name%></span></td></tr>
-          <tr><td>Subject:</td><td><small><input type="text" id="img-<%=name%>-subject" name='subject' maxlength="255" ></small></td></tr>
+          <tr><td>Date:</td><td><input id="img-<%= val.id %>-date" value="<%=val.date%>" name="date" type="date"></td></tr>
+          <tr><td>Company:</td><td><span id="img-<%= val.id %>-company-display"><%=val.company__name%></span></td></tr>
+          <tr><td>Section:</td><td><span id="img-<%= val.id %>-section-display"><%=val.section__name%></span></td></tr>
+          <tr><td>Location:</td><td><span id="img-<%= val.id %>-loc-display"><%=val.location__name%></span></td></tr>
+          <tr><td>Subject:</td><td>
+           <small>
+            <input type="text" id="img-<%=val.id%>-subject" name='subject' value="<%=val.subject%>" maxlength="255" >
+           </small></td></tr>
           </tbody>
         </table>
 
-         <input type="hidden" name="directory" value="<%= dir %>"  maxlength="255" required="" id="img-<%= name %>-dir" >
-         <input type="hidden" name="name" value="<%= name %>" maxlength="255" required="" id="img-<%= name %>-name" >
-         <input type="hidden" name="company_id" value="" id="img-<%= name %>-company" />
-         <input type="hidden" name="section_id" value="<%=section_id%>" id="img-<%= name %>-section" />
-         <input type="hidden" name="location_id" value="<%=loc_id%>" id="img-<%= name %>-loc" />
-        </div>
+         <input type="hidden" name="id" value="<%=val.id%>" id="img-<%= val.name %>-id" />
+         <input type="hidden" name="company_id" value="<%=val.company_id%>" id="img-<%= val.id %>-company" />
+         <input type="hidden" name="section_id" value="<%=val.section_id%>" id="img-<%= val.id %>-section" />
+         <input type="hidden" name="location_id" value="<%=val.location_id%>" id="img-<%= val.id %>-loc" />
+         <input type="hidden" name="lat"  value="<%= val.lat %>" />
+         <input type="hidden" name="lng" value="<%= val.lng %>" />
 
+        </div>
  </form>

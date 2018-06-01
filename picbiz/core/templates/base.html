@@ -1,5 +1,4 @@
  <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -39,9 +38,6 @@
 <header id="header">
 
   {% block toolbar %}
-
-  <p class="mui--text-headline">{% block main_header %}PicBiz{% endblock %}</p>
-  <p><strong>{% block sub_header %} {% endblock %}</p></strong>
 
   <div class="mui-appbar mui--appbar-line-height" style="background-color:#FFF; ">
     <div class="mui-container-fluid">
@@ -89,7 +85,8 @@
 
 <div id="content-wrapper">
   <div class="mui-container-fluid" style="margin-top:85px;">
-
+   {% block main_header %} {% endblock %}
+   {% block sub_header %} {% endblock %}
   {% block content %} {% endblock %}
   </div>
 </div>
@@ -97,15 +94,25 @@
 <footer id="footer">
   <div class="mui-container-fluid">
     <br>
-    Made with ♥ by scottydean
+    Made by scottydean ♥
   </div>
 </footer>
 
+
+<div class="sleeping-giant" id="sleeping-giant" style="height: 0px;">
+  <div class="sleeping-giant-close">
+   <button type="button" class="mui-btn pull-right" onclick="_app.sleeping_giant._close();">Close</button>
+  </div>
+  <div id="sleeping-giant-body"></div>
+</div>
+
+
+
 <script>_app.init("{{csrf_token}}");</script>
+{% block extrajs %} {% endblock %}
 
 
-{% block extrajs %}
-{% endblock %}
+
 
 
 </body>
