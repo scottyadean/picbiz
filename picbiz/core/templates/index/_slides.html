@@ -1,0 +1,32 @@
+<div class="slide-content">
+  <div id="slide-display">
+   <%
+   var hidden = 'block';
+   for(var key in res){
+    if (key > 0){ hidden='none';}
+    %>
+     <img class="slides" src="<%=res[key].thumb_path%>" style="width:100%; display:<%=hidden%>;">
+   <%}%>
+  </div>
+  <button class="mui-btn mui-btn--small display-left" onclick=" _images.slides.divs(-1)">&#10094;</button>
+  <button class="mui-btn mui-btn--small display-right" onclick="_images.slides.divs(1)">&#10095;</button>
+</div>
+
+<hr />
+
+<div id="order-form" style="overflow-y:auto; min-height:120px; boarder-radius:3px; background-color:#33393d;">
+
+<%
+var idx = 1;
+for(var key in res){
+%>
+  <div class="" style="width: 12%; float: left; background-color:#fff;" >
+      <div class="margin-img">
+      <img class="tiny-img" title="IMG-<%=res[key].id%>" src="<%=res[key].thumb_path%>"
+      onclick=" _images.slides.by_index(<%=idx%>);" />
+      </div>
+  </div>
+<%
+idx++;}
+%>
+</div>

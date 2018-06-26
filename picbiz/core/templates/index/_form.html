@@ -1,0 +1,48 @@
+<form class="mui-form" id="search-form">
+
+ <table class="mui-table">
+  <tbody>
+   <tr>
+    <td colspan="100%">
+     <legend>Date</legend>
+     <div class="mui-textfield">
+      <input type="date" class="search-value" value="{{date}}" id="date" name="date" />
+     </div>
+    </td>
+   </tr>
+   <tr>
+   <td>
+      <legend>Company</legend>
+      <div class="mui-textfield">
+       <select class="select2 search-value" id="company" style="min-width:300px;">
+        {% for c in company %}
+         <option value="{{c.id}}">{{c.name}}</option>
+        {% endfor %}
+       </select>
+       </div>
+   </td>
+   <td>
+    <legend>River Section</legend>
+    <div class="mui-textfield">
+     <select class="select2 search-value" id="section" style="min-width:300px;">
+      {% for s in section %}
+      <option value="{{s.id}}">{{s.name}}</option>
+      {% endfor %}
+     </select>
+     </div>
+
+   </td>
+
+   <td class="mui--text-right">
+    <input type="button" id='trigger-search' class="mui-btn mui-btn--primary" value="Search" />
+   </td>
+
+  </tr>
+  </tbody>
+ </table>
+
+
+
+
+
+</form>
